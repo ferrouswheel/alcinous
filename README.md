@@ -40,7 +40,7 @@ In the simplest form, we have only the temporal dimension and a single bit a.
 This bit arrives on a single neuronal input. In most computing, one can think
 of this as a input stream.
 
-Note: I'm aware that in computing, almost everything is built with streams of
+NOTE: I'm aware that in computing, almost everything is built with streams of
 data. You can send the display of a LCD screen with a single binary stream, or
 receive any media that's shared on the internet regardless of how many
 dimensions it's rendered form takes. However, a distinction here is that we
@@ -51,6 +51,8 @@ structure can be reduced back to the single stream case... which I'll leave to
 the theorists.
 
 ### Input/Output DSL
+
+First we concern ourselves with input:
 
 ```
 cluster :hand {
@@ -94,6 +96,29 @@ cluster('hand', dist=1, [
        [ input(repeat=10, speed=10000) ])
    ])
 ```
+
+To include outputs in this description, we introduce
+
+```
+output :o { repeat 10, paired, speed 10 bps }
+```
+
+These function similarly to input, except their state can be updated as
+frequently as `speed` allows (the implementation may allow it to be updated more
+frequently but the value will only be broadcast on the channel on `speed` times
+a second).
+
+Paired indicates that there is a input stream tightly coupled to output. This
+can be more explicitly specified using:
+
+output :o { repeat 10 }
+input :oi { repeat 10 }
+dist o oi 0.5
+
+E.g. it sets up associtivity to a set of matching inputs. E.g. prioperception.
+
+NOTE: not sure if this has much utility. Most senses tied to actuators are
+senses in their own right, so explicitly defining them may be more clear.
 
 ### Glossary
 
